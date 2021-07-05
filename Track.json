@@ -1,0 +1,16 @@
+{
+    "Products_Tracking" : [
+        {
+            "name": "AOC 24G2 Monitor",
+            "url": "https://www.amazon.com/AOC-24G2-Frameless-Adjustable-Guarantee/dp/B07WVN6CWT/ref=sr_1_1?crid=37IGZD2S00YG2&dchild=1&keywords=aoc+24g2&qid=1624900138&sprefix=aoc+24%2Caps%2C218&sr=8-1",
+            "desired_price":185.0
+        },
+        {
+            "name":"32ft LED Strips",
+            "url":"https://www.amazon.com/Govee-Brighter-Million-Controlled-Kitchen/dp/B07WHP2V77/ref=sr_1_2_sspa?dchild=1&keywords=32%2Bft%2Bled%2Bstrip&qid=1624900069&sr=8-2-spons&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEzNzdDOURDMkgzMTFSJmVuY3J5cHRlZElkPUEwMDU4NDAwRkNDTk1JWFhISjlXJmVuY3J5cHRlZEFkSWQ9QTA5ODc1MTQzMEJJU0Y2T1I1MTUmd2lkZ2V0TmFtZT1zcF9hdGYmYWN0aW9uPWNsaWNrUmVkaXJlY3QmZG9Ob3RMb2dDbGljaz10cnVl&th=1",
+            "desired_price": 30.0
+        }
+    ]
+}
+
+
