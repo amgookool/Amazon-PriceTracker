@@ -22,7 +22,7 @@ def calc_discount(price, coupon):
     elif "$" in coupon:
         index = coupon.find("$")
         coupon_val = coupon[index + 1:]
-        price_discount = round(price - float(coupon_val))
+        price_discount = round(price - float(coupon_val), 2)
         return {
             "Amazon_Price": price,
             "Discounted_Price": price_discount
@@ -84,12 +84,12 @@ class Bot_tracker:
                 }
                 self.products.append(product_dict)
 
-                # product = Amazon_item(what_product, product_url)
-                # print(product.name)
-                # print(product.pricing)
-                # print(product.image_url)
-                # print(product.coupon)
 
+# product = Amazon_item(what_product, product_url)
+# print(product.name)
+# print(product.pricing)
+# print(product.image_url)
+# print(product.coupon)
 
 bot = Bot_tracker()
 
