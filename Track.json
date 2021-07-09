@@ -14,7 +14,13 @@
             "name": "AOC 24G2 Monitor",
             "url": "https://www.amazon.com/AOC-24G2-Frameless-Adjustable-Guarantee/dp/B07WVN6CWT/ref=sr_1_1?crid=37IGZD2S00YG2&dchild=1&keywords=aoc+24g2&qid=1624900138&sprefix=aoc+24%2Caps%2C218&sr=8-1",
             "desired_price":185.0
+        },
+        {
+            "name": "Percentage LED Lights",
+            "url": "https://www.amazon.com/Govee-Segmented-Assistant-Bluetooth-Changing/dp/B08X483NSS/?_encoding=UTF8&pd_rd_w=t1AAt&pf_rd_p=798f8dc8-4a99-4f89-8e6b-3358f37cd3b7&pf_rd_r=97WD7SAVNPPRD0M4WNSJ&pd_rd_r=116c29af-0840-4e23-808b-056f01a842fa&pd_rd_wg=iS4lJ&ref_=pd_gw_ci_mcx_mr_hp_d",
+            "desired_price":50.0
         }
+
     ]
 }
 
