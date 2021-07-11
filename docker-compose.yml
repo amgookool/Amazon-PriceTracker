@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  tracker-app:
+    build: ./
+    volumes:
+      - ./app:/amz_tracker/app
+    restart: unless-stopped
+    depends_on:
+      - splash-renderer
+    links:
+      - splash-renderer 
+
+  splash-renderer:
+    image: scrapinghub/splash:latest
+    ports:
+      - 8050:8050
+    restart: unless-stopped
