@@ -6,13 +6,16 @@ services:
     volumes:
       - ./app:/amz_tracker/app
     restart: unless-stopped
+    environment: 
+      - PYTHONUNBUFFERED=1
+      - "TZ=America/Port_of_Spain"
     depends_on:
       - splash-renderer
     links:
       - splash-renderer 
 
   splash-renderer:
-    image: scrapinghub/splash:latest
+    image: scrapinghub/splash
     ports:
       - 8050:8050
     restart: unless-stopped
