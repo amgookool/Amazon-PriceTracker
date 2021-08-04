@@ -10,14 +10,89 @@
   
     "Products_Tracking": [
       {
-        "name": "Product 1 Name",
-        "url": "Product 1 URL",
+        "name": "Corsair Icue 465X Case",
+        "url": "https://www.amazon.com/Corsair-Icue-Mid-Tower-Smart-Black/dp/B07W6RCKWF/ref=sr_1_2?dchild=1&keywords=corsair+case&qid=1628001732&sr=8-2",
         "desired_price": 120.0
       },
       {
-        "name": "Product 2 Name",
-        "url": "Product 2 URL",
-        "desired_price":245.0
+        "name": "AOC 24G2 Monitor",
+        "url": "https://www.amazon.com/AOC-24G2-Frameless-Adjustable-Guarantee/dp/B07WVN6CWT/ref=sr_1_1?crid=37IGZD2S00YG2&dchild=1&keywords=aoc+24g2&qid=1624900138&sprefix=aoc+24%2Caps%2C218&sr=8-1",
+        "desired_price": 190.0
+      },
+      {
+        "name": "Corsair 4x8GB @ 3600MHz DDR4 RGB RAM",
+        "url": "https://www.amazon.com/Corsair-Vengeance-PC4-28800-Desktop-Memory/dp/B07TB4J2DD/ref=sr_1_5?dchild=1&keywords=corsair+ram&qid=1628002002&sr=8-5",
+        "desired_price": 170.0
+      },
+      {
+        "name": "Corsair 2x8GB @ 3200MHz DDR4 RGB RAM",
+        "url": "https://www.amazon.com/CORSAIR-Vengeance-3200MHz-Desktop-Memory/dp/B07D1XCKWW/ref=sr_1_2?dchild=1&keywords=corsair+ram&qid=1628002002&sr=8-2",
+        "desired_price": 75.0
+      },
+      {
+        "name": "Cooler Master 850W Gold Modular Power Supply ",
+        "url": "https://www.amazon.com/Cooler-Master-Efficiency-Connectors-Semi-fanless/dp/B08M9M6DB9/ref=sr_1_9?crid=PJO80AFIP21A&dchild=1&keywords=850w+power+supply&qid=1628002500&sprefix=850W+Power+S%2Caps%2C251&sr=8-9",
+        "desired_price": 116.0
+      },
+      {
+          "name": "EVGA SuperNOVA 850GA Power Supply",
+          "url": "https://www.amazon.com/EVGA-Supernova-Modular-Warranty-220-GA-0850-X1/dp/B07WSXQTD9/ref=sr_1_5_mod_primary_new?dchild=1&keywords=850w+power+supply&qid=1628003762&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-5",
+          "desired_price": 112.0
+      },
+      {
+          "name": "EVGA SuperNOVA 850GT Power Supply",
+          "url": "https://www.amazon.com/EVGA-Supernova-Modular-Warranty-220-GT-0850-Y1/dp/B08X1C8TK9/ref=sxin_13_ac_d_rm?ac_md=0-0-ODUwdyBwb3dlciBzdXBwbHk%3D-ac_d_rm_rm_rm&cv_ct_cx=850w+power+supply&dchild=1&keywords=850w+power+supply&pd_rd_i=B08X1C8TK9&pd_rd_r=5a64a86b-8af8-4804-b98d-cebce542e213&pd_rd_w=GW9Po&pd_rd_wg=9DOIo&pf_rd_p=7b6dbc92-798f-4e44-a851-85321a50dda0&pf_rd_r=XAPJZG705E9CEQFFZ488&psc=1&qid=1628003762&sr=1-1-12d4272d-8adb-4121-8624-135149aa9081",
+          "desired_price": 135.0
+      },
+      {
+          "name": "EVGA SuperNOVA 850G5 Power Supply",
+          "url": "https://www.amazon.com/EVGA-Supernova-Modular-Warranty-220-G5-0850-X1/dp/B07WDLTGC1/ref=sxin_13_ac_d_rm?ac_md=1-1-ZXZnYSA4NTB3-ac_d_rm_rm_rm&cv_ct_cx=850w+power+supply&dchild=1&keywords=850w+power+supply&pd_rd_i=B07WDLTGC1&pd_rd_r=5a64a86b-8af8-4804-b98d-cebce542e213&pd_rd_w=GW9Po&pd_rd_wg=9DOIo&pf_rd_p=7b6dbc92-798f-4e44-a851-85321a50dda0&pf_rd_r=XAPJZG705E9CEQFFZ488&psc=1&qid=1628003762&sr=1-2-12d4272d-8adb-4121-8624-135149aa9081",
+          "desired_price": 130.0
+      },
+      {
+          "name": "Corsair RMX Series 850W Power Supply",
+          "url": "https://www.amazon.com/CORSAIR-RM850x-Certified-Modular-Supply/dp/B079H5WNXN/ref=sr_1_8?dchild=1&keywords=850w+power+supply&qid=1628003762&sr=8-8",
+          "desired_price": 135.0
+      },
+      {
+          "name": "Corsair RM Series 850W Power Supply",
+          "url": "https://www.amazon.com/CORSAIR-RM850x-Certified-Modular-Supply/dp/B07RCKG95L/ref=sxin_13_ac_d_rm?ac_md=2-2-Y29yc2FpciA4NTB3IHBvd2VyIHN1cHBseQ%3D%3D-ac_d_rm_rm_rm&cv_ct_cx=850w%2Bpower%2Bsupply&dchild=1&keywords=850w%2Bpower%2Bsupply&pd_rd_i=B07JWT8YV3&pd_rd_r=d67fb18a-cb8c-4ca0-9799-1090fa1e1b95&pd_rd_w=eFgzJ&pd_rd_wg=S3MHr&pf_rd_p=7b6dbc92-798f-4e44-a851-85321a50dda0&pf_rd_r=5E26D7YY256B0E5Y9MCD&qid=1628003902&sr=1-3-12d4272d-8adb-4121-8624-135149aa9081&th=1",
+          "desired_price": 120.0
+      },
+      {
+          "name": "Corsair LL Series RBG Fans (White)",
+          "url": "https://www.amazon.com/CORSAIR-LL120-120mm-Triple-Lighting/dp/B07LF1B1Y8/ref=sr_1_3?dchild=1&keywords=corsair+rgb+fans&qid=1628004612&sr=8-3",
+          "desired_price":92.0
+      },
+      {
+          "name": "Corsair LL Series RBG Fans (Black)",
+          "url": "https://www.amazon.com/Corsair-LL120-120mm-Light-Lighting/dp/B075VGN4M1/ref=sr_1_2?dchild=1&keywords=corsair+rgb+fans&qid=1628004612&sr=8-2",
+          "desired_price": 92.0
+      },
+      {
+          "name": "[AM4] ASUS TUF X570 ATX MOBO (WIFI)",
+          "url": "https://www.amazon.com/ASUS-TUF-X570-Plus-Motherboard-Lighting/dp/B07SXF8GY3/ref=sr_1_1?dchild=1&keywords=x570+motherboard+wifi&qid=1628005205&sr=8-1",
+          "desired_price":170.0
+      },
+      {
+          "name": "[AM4] MSI Gaming Edge X570 MOBO (WIFI)",
+          "url": "https://www.amazon.com/MSI-X570-Gaming-Motherboard-Wi-Fi/dp/B07T2FWCYG/ref=sr_1_4?dchild=1&keywords=x570+motherboard+wifi&qid=1628005205&sr=8-4",
+          "desired_price":170.0
+      },
+      {
+          "name": "[AM4] GIGABYTE AORUS Elite X570 MOBO (WIFI)",
+          "url": "https://www.amazon.com/Gigabyte-X570-AORUS-802-11AC-Motherboard/dp/B07WL5MFXL/ref=sr_1_5?dchild=1&keywords=x570+motherboard+wifi&qid=1628005205&sr=8-5",
+          "desired_price":180.0
+      },
+      {
+          "name": "Ryzen 5 5600X CPU",
+          "url": "https://www.amazon.com/AMD-Ryzen-5600X-12-Thread-Processor/dp/B08166SLDF/ref=sr_1_4?dchild=1&keywords=ryzen+5000+series&qid=1628005633&sr=8-4",
+          "desired_price":280.0
+      },
+      {
+          "name": "Ryzen 7 5800X CPU",
+          "url": "https://www.amazon.com/AMD-Ryzen-5800X-16-Thread-Processor/dp/B0815XFSGK/ref=sr_1_3_mod_primary_new?dchild=1&keywords=ryzen+5000+series&qid=1628005633&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=8-3",
+          "desired_price":400.0
       }
     ],
   
