@@ -1,21 +1,12 @@
 version: "3"
 
 services:
-  tracker-app:
+  app:
     build: ./
+    container_name: amz-tracker
     volumes:
       - ./app:/amz_tracker/app
     restart: unless-stopped
     environment: 
       - PYTHONUNBUFFERED=1
       - "TZ=America/Port_of_Spain"
-    depends_on:
-      - splash-renderer
-    links:
-      - splash-renderer 
-
-  splash-renderer:
-    image: scrapinghub/splash
-    ports:
-      - 8050:8050
-    restart: unless-stopped

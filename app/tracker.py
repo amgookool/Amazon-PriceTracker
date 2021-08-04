@@ -1,192 +1,277 @@
+import codecs
+import json
+import logging as log
+import random
+import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
-from bs4 import BeautifulSoup as Soup
 from email.mime.text import MIMEText
-from dotenv import load_dotenv
 from time import sleep
+
 import requests
 import schedule
-import smtplib
-import logging
-import json
-import ssl
-import os
+from bs4 import BeautifulSoup as Soup
 
-logs_format = "%(asctime)s | %(levelname)s | %(message)s"
+logs_format = "%(asctime)s|%(levelname)s|%(message)s"
 
-logging.basicConfig(level=logging.DEBUG, encoding="utf-8",
-                    format=logs_format, datefmt="%d-%b-%y %H:%M:%S")
+log.basicConfig(level=log.INFO, encoding="utf-8",
+                format=logs_format, datefmt="%d-%b-%y %H:%M:%S")
 
+json_path = "./app/Settings.json"
 
-def job():
-    logging.info("Starting Scraping Job")
-    bot = Price_tracker()
-    bot.send_mail()
+config_content = """ Amazon Tracker is initialized with the following configuration:
+---> Sender Email: {arg0}
+---> Receiver Email: {arg1}
+---> Tracking Schedule : {arg2}"""
 
 
-class Amazon_item:
+class Amazon_Product:
+    def __init__(self, amz_req):
+        try:
+            self.scraper = Soup(amz_req.text, "lxml")
+            self.url = amz_req.url
+        except Exception as err:
+            print(err)
+
     coupon = None
-    headers = {
-        'authority': 'www.amazon.com',
-        'pragma': 'no-cache',
-        'cache-control': 'no-cache',
-        'dnt': '1',
-        'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36',
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-        'sec-fetch-site': 'none',
-        'sec-fetch-mode': 'navigate',
-        'sec-fetch-dest': 'document',
-        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-    }
-
-    def __init__(self, prod_url):
-        logging.info(
-            "Sending request to Splash javaascript rendering container")
-        request = requests.get(
-            "http://splash-renderer:8050/render.html",headers=self.headers, params={"url": prod_url, "wait": 3})
-        self.scraper = Soup(request.text, "lxml")
 
     @property
     def name(self):
-        head_element = self.scraper.find("h1", id="title")
-        prod_name = head_element.find("span", id="productTitle").text.split()
-        return " ".join(prod_name)
+        _name = self.scrpe_name()
+        return _name
+
+    @property
+    def image(self):
+        _image = self.scrpe_img_url()
+        return _image
 
     @property
     def pricing(self):
-        amz_price = None
-        price_element = self.scraper.find("div", id="price")
-        if price_element is not None:
-            try:
-                amz_price = float(price_element.find("span", id="priceblock_saleprice").text[1:])
-            except Exception:
-                pass
-            try:
-                amz_price = float(price_element.find("span", id="priceblock_ourprice").text[1:])
-            except Exception:
-                pass
-            try:
-                amz_price = float(price_element.find("span",id= "priceblock_dealprice").text[1:])
-            except Exception as e:
-                pass
-            coupon_element = self.scraper.find('tr', class_="couponFeature")
-            if coupon_element is None:
-                return {"Amazon_Price": amz_price, "Discounted_Price": None}
-            else:
-                self.coupon = coupon_element.find('span', class_="a-color-success").text.split()[3]
-                return calc_discount(price=amz_price, coupon=self.coupon)
-        else:
+        _pricing = self.scrpe_pricing()
+        return _pricing
+
+    def scrpe_name(self):
+        try:
+            name_element = self.scraper.find("h1", id="title")
+            product_name = name_element.find(
+                "span", id="productTitle").text.split()
+            return " ".join(product_name)
+        except Exception as err:
+            log.error("Could not find a HTML name element for product name")
+            print(err)
             return None
 
-    @property
-    def image_url(self):
-        img_container = self.scraper.find('div', id="imgTagWrapperId")
-        img_tag = img_container.find('img')
-        return img_tag.get("src")
+    def scrpe_img_url(self):
+        try:
+            img_element = self.scraper.find('div', id="imgTagWrapperId")
+            img_tag = img_element.find("img")
+            return img_tag.get("src")
+        except Exception as err:
+            log.error("Could not find a HTML element for product image")
+            print(err)
+            return None
+
+    def scrpe_pricing(self):
+        amz_price = None
+
+        price_element = self.scraper.find("div", id="price")
+
+        if price_element is not None:
+            try:
+                amz_price = float(price_element.find(
+                    "span", id="priceblock_saleprice").text[1:])  # amzn retail price
+            except AttributeError:
+                pass  # move on to next html id for price
+
+            try:
+                amz_price = float(price_element.find(
+                    "span", id="priceblock_ourprice").text[1:])
+            except AttributeError:
+                pass  # move on to next html id for price
+
+            try:
+                amz_price = float(price_element.find(
+                    "span", id="priceblock_dealprice").text[1:])
+            except AttributeError:
+                pass  # move on to next html id for price
+
+            coupon_elem = self.scraper.find('tr', class_="couponFeature")
+
+            if coupon_elem is None:
+                return {"Amazon_Price": amz_price, "Discounted_Price": None}
+            else:
+                self.coupon = coupon_elem.find(
+                    "span", class_="a-color-success").text.split()[3]
+                return calc_discount(price=amz_price, coupon=self.coupon)
+        else:
+            return None  # indicates that amazon product is out of stock
 
 
-email_content = """\
-        <html>
-        <body>
-            <h2 style="color:red;font-weight:bold;">{arg1}</h2>
-            <img src="{arg2}" alt="Failed to load product image">
-            <h4>Amazon Price: <span style="color:red;">${arg3}</span></h4>
-            <h4>Coupon Detected: <span style="color:red;">{arg4}</span></h4>
-            <h4>Discounted Price: <span style="color:red;">${arg5}</span></h4>
-            <br><br>
-            <a style="background-color:red; color:white; padding: 20px; text-decoration:None;" href="{arg6}"> View Product</a>
-        </body>
-        </html>   
-        """
-
-
-class Price_tracker:
-
+class Amazon_Tracker:
     def __init__(self):
-        load_dotenv()
-        logging.info("Reading Configuration from .env file")
-        self.email = os.environ.get("sender_email")
-        self.password = os.environ.get("sender_pswd")
-        self.receiver = os.environ.get("receiver_email")
-        self.products = []
-        with open('./app/Track.json', 'r') as prod_list:
-            logging.info("Reading the Track.json file")
-            track_products = json.load(prod_list).get("Products_Tracking")
-            for index, item in enumerate(track_products):
-                what_product = item.get("name")
-                product_url = item.get("url")
-                desired_price = item.get("desired_price")
-                product_dict = {
-                    "product" + str(index): {
-                        "Name": what_product,
-                        "URL": product_url,
-                        "Desired_price": desired_price
-                    }
-                }
-                self.products.append(product_dict)
-        prod_list.close()
+        self.configs = get_configs()
+        self.email_content = get_mail_template()
+        self.smtp_server = self.configs.get("smtp_server")
+        self.smtp_port = self.configs.get("smtp_port")
+        self.sender_email = self.configs.get("bot_email")
+        self.sender_pswd = self.configs.get("bot_passwd")
+        self.receiver_email = self.configs.get("receiver_email")
+        self.cmd_schedule = self.configs.get("schedule").split()
 
-    def send_mail(self):
-        for product in self.products:
+    # Define a function that gets the products to track
+    @property
+    def track_products(self):
+        prods = get_prod_list()
+        return prods
+
+    # Function that defines the runtime of the tracker bot
+    def run(self):
+        sched = self.read_schedule()
+        kwargs = {
+            "arg0": self.sender_email,
+            "arg1": self.receiver_email,
+            "arg2": sched.get("Description")
+        }
+        log.info(config_content.format(**kwargs))
+        # returns the appropiate schedule module object
+        return sched.get("Sched-Variable")
+
+    # Generator that calls the Scraper Amazon class
+    def amz_generator(self):
+        for prod in self.track_products:
+            browser_header = get_request_header()
+            prod_url = prod.get("url")
+            request = requests.get(
+                prod_url, headers=browser_header, params={"wait": 10})
+            yield Amazon_Product(request)
+
+    # Configuring SMTP protocol and message to send email notification
+    def sendmail(self):
+        log.info(f"Tracking {len(self.track_products)} products")
+        products = self.amz_generator()
+        econtent = None
+        for index, product in enumerate(products):
+            usr_prod_name = self.track_products[index].get("name")
+            desired_price = self.track_products[index].get("desired_price")
             message = MIMEMultipart("alternative")
-            message["From"] = str(self.email)
-            message["To"] = self.receiver
-            mail_content = ""
-            item = product.values()
-            for info in item:
-                _name = info.get("Name")
-                message["Subject"] = "Price Alert: " + _name
-                _url = info.get("URL")
-                desired_price = info.get("Desired_price")
-                logging.info(f"Starting Scrape for {_name}")
+            message["From"] = self.sender_email
+            message["To"] = self.receiver_email
+            message["Subject"] = "Price Alert: " + usr_prod_name
 
-                _product = Amazon_item(_url)
+            if product.pricing is None:
+                log.info(f"{usr_prod_name} is currently out of stock")
+                continue
 
-                if _product.pricing is None:
-                    logging.info(f"{_name} product is currently out of stock")
-                    break
+            elif product.pricing.get("Discounted_Price") is None and product.pricing.get(
+                    "Amazon_Price") <= desired_price:
+                econtent = self.fill_content(product)
 
-                elif _product.pricing.get("Discounted_Price") is None and _product.pricing.get(
-                        "Amazon_Price") <= desired_price:
-                    kwargs = {"arg1": _product.name, "arg2": _product.image_url,
-                              "arg3": _product.pricing.get("Amazon_Price"),
-                              "arg4": "None", "arg5": _product.pricing.get("Amazon_Price"), "arg6": _url}
-                    mail_content = email_content.format(**kwargs)
+            elif product.pricing.get("Discounted_Price") is None and product.pricing.get(
+                    "Amazon_Price") > desired_price:
+                log.info(
+                    f"There are no coupons and the Amazon price is > desired price for {usr_prod_name}")
+                continue
 
-                elif _product.pricing.get("Discounted_Price") is None and _product.pricing.get(
-                        "Amazon_Price") > desired_price:
-                    logging.info(
-                        f"There are no coupons and the Amazon price is > desired price for {_name}")
-                    break
+            elif product.pricing.get("Amazon_Price") <= desired_price or product.pricing.get(
+                    "Discounted_Price") <= desired_price and product.pricing.get("Discounted_Price") is not None:
+                econtent = self.fill_content(product)
 
-                elif _product.pricing.get("Amazon_Price") <= desired_price or _product.pricing.get(
-                        "Discounted_Price") <= desired_price and _product.pricing.get("Discounted_Price") is not None:
-                    kwargs = {"arg1": _product.name, "arg2": _product.image_url,
-                              "arg3": _product.pricing.get("Amazon_Price"),
-                              "arg4": _product.coupon, "arg5": _product.pricing.get("Discounted_Price"), "arg6": _url}
-                    mail_content = email_content.format(**kwargs)
+            elif product.pricing.get("Amazon_Price") > desired_price or product.pricing.get(
+                    "Discounted_Price") > desired_price:
+                log.info(
+                    f"Both Amazon price and Coupon Discounted price is > desired price for {usr_prod_name}")
+                continue
 
-                elif _product.pricing.get("Amazon_Price") > desired_price or _product.pricing.get(
-                        "Discounted_Price") > desired_price:
-                    logging.info(
-                        f"Both Amazon price and Coupon Discounted price is > desired price for {_name}")
-                    break
-                content = MIMEText(mail_content, 'html')
-                message.attach(content)
-                context = ssl.create_default_context()
+            mail_content = MIMEText(econtent, 'html')
+            message.attach(mail_content)
 
-                with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as mail_server:
-                    logging.info(f"Sending email for {_name} product")
-                    mail_server.login(self.email, self.password)
-                    mail_server.sendmail(
-                        self.email, self.receiver, message.as_string())
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, context=context) as mail_driver:
+                log.info(f"Sending mail for {usr_prod_name}")
+                mail_driver.login(self.sender_email, self.sender_pswd)
+                mail_driver.sendmail(
+                    self.sender_email,
+                    self.receiver_email,
+                    message.as_string())
         return
 
+    # Function to populate html template with appropiate data
+    def fill_content(self, product: Amazon_Product) -> str:
+        if product.coupon is None:
+            kwargs = {
+                "arg1": product.name,
+                "arg2": product.image,
+                "arg3": product.pricing.get("Amazon_Price"),
+                "arg4": "None",
+                "arg5": product.pricing.get("Amazon_Price"),
+                "arg6": product.url
+            }
+        else:
+            kwargs = {
+                "arg1": product.name,
+                "arg2": product.image,
+                "arg3": product.pricing.get("Amazon_Price"),
+                "arg4": product.coupon,
+                "arg5": product.pricing.get("Discounted_Price"),
+                "arg6": product.url
+            }
+        return self.email_content.format(**kwargs)
 
-def calc_discount(price, coupon):
+    # reading the user config to determine how often bot runs
+    def read_schedule(self):
+        cmd_main = None  # represents m in "m -10"
+        cmd_param = None  # represents -10 in "m -10"
+        descr = None  # Describes the schedule set in settings.json
+        sched = None  # Returns a python schedule object to run job
+        for chars in self.cmd_schedule:
+            if '-' in chars:
+                cmd_param = chars
+            else:
+                cmd_main = chars
+
+        if cmd_main == "dly" and cmd_param is None:
+            descr = "Run everyday at 12:00 AM"
+            sched = schedule.every().day.at("00:00").do(self.sendmail)
+
+        elif cmd_main == "dly" and cmd_param is not None:
+            interval = cmd_param[1:]
+            descr = f"Run everyday at {interval}"
+            sched = schedule.every().day.at(interval).do(self.sendmail)
+
+        elif cmd_main == "d" and cmd_param is None:
+            descr = "Run everyday at the time the container is started"
+            sched = schedule.every().day.do(self.sendmail)
+
+        elif cmd_main == "d" and cmd_param is not None:
+            interval = int(cmd_param[1:])
+            descr = f"Run every {interval} days"
+            sched = schedule.every(interval).days.do(self.sendmail)
+
+        elif cmd_main == "h" and cmd_param is None:
+            descr = "Runs every hour"
+            sched = schedule.every().hour.do(self.sendmail)
+
+        elif cmd_main == "h" and cmd_param is not None:
+            interval = int(cmd_param[1:])
+            descr = f"Run every {interval} hours"
+            sched = schedule.every(interval).hours.do(self.sendmail)
+
+        elif cmd_main == "m" and cmd_param is None:
+            descr = "Runs every minute"
+            sched = schedule.every().minute.do(self.sendmail)
+
+        elif cmd_main == "m" and cmd_param is not None:
+            interval = int(cmd_param[1:])
+            descr = f"Run every {interval} minutes"
+            sched = schedule.every(interval).minutes.do(self.sendmail)
+        return {"Description": descr, "Sched-Variable": sched}
+
+
+# Function to calulate the discounted price if coupon was detected on Amazon
+def calc_discount(price: float, coupon: str):
     if "%" in coupon:
         index = coupon.find("%")
-        coupon_val = "0." + coupon[0:index]
+        coupon_val = float(coupon[0:index]) / 100
         discount = price * float(coupon_val)
         price_discount = round(price - discount, 2)
         return {
@@ -203,62 +288,54 @@ def calc_discount(price, coupon):
         }
 
 
-def tracker_init():
-    load_dotenv()
-    logging.info("Initializing Amazon Price Tracker")
-    cmd_param = None
-    cmd_main = None
-    sched = None
-    usr_time = os.environ.get("sched_time").split()
-    for item in usr_time:
-        if "-" in item:
-            cmd_param = item
-        else:
-            cmd_main = item
-
-    if cmd_main == "dly" and cmd_param is None:
-        logging.info("Schedule: Run everyday at 12:00 AM")
-        sched = schedule.every().day.at("00:00").do(job)
-
-    elif cmd_main == "dly" and cmd_param is not None:
-        interval = cmd_param[1:]
-        logging.info(f"Schedule: Run everyday at {interval}")
-        sched = schedule.every().day.at(interval).do(job)
-
-    elif cmd_main == "d" and cmd_param is None:
-        logging.info(
-            "Schedule: Run everyday at the time the container is started")
-        sched = schedule.every().day.do(job)
-
-    elif cmd_main == "d" and cmd_param is not None:
-        interval = int(cmd_param[1:])
-        logging.info(f"Schedule: Run every {interval} days")
-        sched = schedule.every(interval).days.do(job)
-
-    elif cmd_main == "h" and cmd_param is None:
-        logging.info("Schedule: Runs every hour")
-        sched = schedule.every().hour.do(job)
-
-    elif cmd_main == "h" and cmd_param is not None:
-        interval = int(cmd_param[1:])
-        logging.info(f"Schedule: Run every {interval} hours")
-        sched = schedule.every(interval).hours.do(job)
-
-    elif cmd_main == "m" and cmd_param is None:
-        logging.info("Schedule: Runs every minute")
-        sched = schedule.every().minute.do(job)
-
-    elif cmd_main == "m" and cmd_param is not None:
-        interval = int(cmd_param[1:])
-        logging.info(f"Schedule: Run every {interval} minutes")
-        sched = schedule.every(interval).minutes.do(job)
-    return sched
+# Function that reads the html templaet for email fucntion
+def get_mail_template():
+    template = codecs.open("./app/mail_template.html", 'r')
+    return template.read()
 
 
+# Defining a function that get the configuration from json file
+def get_configs():
+    with open(json_path, "r") as json_file:
+        configs = json.load(json_file).get("Tracker_Configuration")
+        configs["bot_passwd"] = "Kooltron2004!"
+        json_file.close()
+        return configs
 
-bot_sched = tracker_init()
-logging.info("Amazon Price tracker is now active")
 
-while True:
-    schedule.run_pending()
-    sleep(1)
+# Defining a function that gets the product list from json file
+def get_prod_list():
+    with open(json_path, "r") as json_file:
+        listings = json.load(json_file).get("Products_Tracking")
+        json_file.close()
+    return listings
+
+
+# Defining the browser header to bypass bot verification
+def get_request_header():
+    with open(json_path, "r") as json_file:
+        user_agents = json.load(json_file).get("Browser_User_Agents")
+        user_agent = random.choice(user_agents)
+        header = {
+            'authority': 'www.amazon.com',
+            'pragma': 'no-cache',
+            'cache-control': 'no-cache',
+            'dnt': '1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': user_agent,
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'sec-fetch-site': 'none',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-dest': 'document',
+            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+        }
+        json_file.close()
+    return header
+
+
+if __name__ == '__main__':
+    amazon_scraper = Amazon_Tracker()
+    amazon_scraper.run()
+    while True:
+        schedule.run_pending()
+        sleep(1)

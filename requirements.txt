@@ -5,8 +5,10 @@ f-string==0.1
 idna==2.10
 lxml==4.6.3
 parse==1.19.0
+pycodestyle==2.7.0
 python-dotenv==0.18.0
 requests==2.25.1
 schedule==1.1.0
 soupsieve==2.2.1
+toml==0.10.2
 urllib3==1.26.6
