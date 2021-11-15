@@ -1,0 +1,19 @@
+{% extends 'Base.html' %} 
+{% load static %} 
+{% block Stylesheet%}
+<link rel="stylesheet" href="{% static 'Tracker/SSettings.css' %}">
+{% endblock %}
+
+
+{% block Content %} 
+
+
+{% for agent in uagents %}
+    <ul>
+        <li>{{agent}}</li>
+    </ul>
+{% endfor %}
+
+
+
+{% endblock %}

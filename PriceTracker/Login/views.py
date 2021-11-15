@@ -12,7 +12,7 @@ def LoginView(request):
             return redirect('Home')
         else:
             # Return an Invalid Login error
-            messages.error(request,"There was an error Logging into your Account")
+            messages.success(request,"Incorrect Username or Password")
             return redirect("Login")
     else:
         context = {}

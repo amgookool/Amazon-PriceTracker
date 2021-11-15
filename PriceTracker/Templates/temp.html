@@ -1,0 +1,56 @@
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Container wrapper -->
+    <div class="container-fluid">
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Navbar brand -->
+        <a class="navbar-brand mt-2 mt-lg-0" href="{% url 'Home' %}">
+            <i class="fas fa-dragon"></i>
+            Kool PriceTracker
+        </a>
+
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Tracking' %}">Tracked products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Settings' %}">Settings</a>
+                </li>
+            </ul>
+            <!-- End Left links -->
+        </div>
+        <!-- End Collapsible wrapper -->
+
+        <!-- Right elements -->
+        <div class="d-flex justify-content-end">
+                <!-- Avatar -->
+                <a class="dropdown-toggle hidden-arrow" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+                    aria-expanded="false" aria-haspopup="true">
+                    <i class="fas fa-user-circle fa-lg"></i>
+                </a>
+                <ul class="dropdown-menu dropdown" aria-labelledby="navbarDropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="#">Change Password</a>
+                    </li>
+                    <div class="dropdown-divider"></div>
+                    <li>
+                        <a class="dropdown-item" href="#">Logout</a>
+                    </li>
+                </ul>
+        </div>
+        <!-- End Right elements -->
+    </div>
+    <!-- End Container wrapper -->
+</nav>
+<!-- End Navbar -->
